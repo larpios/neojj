@@ -78,16 +78,13 @@ end
 local function construct_opts(opts)
   opts = opts or {}
 
+  local search_dir = opts.cwd or "."
   if opts.cwd and not opts.no_expand then
-    opts.cwd = vim.fn.expand(opts.cwd)
+    search_dir = vim.fn.expand(opts.cwd)
   end
 
-  if not opts.cwd then
-    local jj_cli = require("neojj.lib.jj.cli")
-    local root = jj_cli.find_workspace_root(".")
-    opts.cwd = root or vim.uv.cwd()
-    opts._workspace_root = root
-  end
+  local jj_cli = require("neojj.lib.jj.cli")
+  opts._workspace_root = jj_cli.find_workspace_root(search_dir)
 
   return opts
 end
